@@ -1,6 +1,6 @@
 {
   "name": "discord-ts-template",
-  "version": "dev-1.0.0",
+  "version": "1.0.0",
   "description": "All-in-one Discord.js v14 TypeScript bot template with hybrid commands, MongoDB, and more.",
   "main": "dist/index.js",
   "scripts": {
