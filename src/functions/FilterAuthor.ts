@@ -25,5 +25,6 @@ export const filterAuthor = async (
     components: [actionRow],
     ephemeral: true,
   });
+
   return false;
 };

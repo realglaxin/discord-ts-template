@@ -6,11 +6,12 @@ export default async function connectDatabase(
   client: ExtendedClient,
   uri: string,
   options: ConnectOptions
-): Promise<void> {
+): Promise<mongoose.mongo.Db | undefined> {
   await mongoose
     .connect(uri, options)
     .then(() => {
       logger.success("[MongoDB] Connected to the database successfully.");
+      return mongoose.connection.db;
     })
     .catch((err) => {
       logger.error(
@@ -18,4 +19,6 @@ export default async function connectDatabase(
         client
       );
     });
+
+  return undefined;
 }

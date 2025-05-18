@@ -1,7 +1,7 @@
 {
-  "name": "discord-bot-ts-template",
-  "version": "1.0.0",
-  "description": "The Typescript Hybird Commands Template For Discord Bots.",
+  "name": "discord-ts-template",
+  "version": "dev-1.0.0",
+  "description": "All-in-one Discord.js v14 TypeScript bot template with hybrid commands, MongoDB, and more.",
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
@@ -9,20 +9,20 @@
     "dev": "npm run build && npm start"
   },
   "author": "realglaxin",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@sapphire/ratelimits": "^2.4.11",
     "chalk": "^4.1.2",
-    "discord-hybrid-sharding": "^2.2.4",
-    "discord.js": "^14.17.3",
-    "dokdo": "^1.0.1",
-    "moment-timezone": "^0.5.46",
-    "mongoose": "^8.9.5"
+    "discord-hybrid-sharding": "^2.2.6",
+    "discord.js": "^14.19.3",
+    "dokdo": "^1.1.0",
+    "moment-timezone": "^0.5.48",
+    "mongoose": "^8.15.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.15.18",
     "rimraf": "^6.0.1",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   }
 }

@@ -7,7 +7,7 @@ import {
 import { Context, Event, type ExtendedClient } from "../../structures/index";
 import { ExtendedButtonBuilder } from "../../functions/Button";
 import { checkCooldown } from "../../functions/Cooldown";
-import { checkBlacklist } from "../../functions/Blacklist";
+import { checkBlacklist } from "../../functions/FilterBlacklist";
 
 export default class CtxCreate extends Event {
   constructor(client: ExtendedClient, file: string) {

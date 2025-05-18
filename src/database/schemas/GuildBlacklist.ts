@@ -8,7 +8,7 @@ export default model(
       required: true,
     },
     manager: {
-      id: SchemaTypes.String,
+      type: SchemaTypes.String,
     },
   })
 );

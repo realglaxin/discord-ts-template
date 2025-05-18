@@ -21,40 +21,33 @@ export const paginator = async (
   let page = 0;
   const date = Date.now();
 
+  const createButton = (id: string, emoji: string, disabled: boolean) =>
+    client
+      .button()
+      .secondary(`${id}_${ctx.author?.id}_${date}`, undefined, emoji, disabled);
+
+  const createButtonRow = () => {
+    const isFirstPage = page === 0;
+    const isLastPage = page === pages.length - 1;
+
+    return new ActionRowBuilder<ExtendedButtonBuilder>().addComponents(
+      createButton("first", client.emoji.paginator.first, isFirstPage),
+      createButton("previous", client.emoji.paginator.previous, isFirstPage),
+      createButton("next", client.emoji.paginator.next, isLastPage),
+      createButton("last", client.emoji.paginator.last, isLastPage)
+    );
+  };
+
+  const updateMessage = async () => {
+    await reply?.edit({
+      embeds: [pages[page]],
+      components: [createButtonRow()],
+    });
+  };
+
   const reply = await ctx?.sendMessage({
     embeds: [pages[page]],
-    components: [
-      new ActionRowBuilder<ExtendedButtonBuilder>().addComponents(
-        client
-          .button()
-          .secondary(
-            `first_${ctx.author.id}_${date}`,
-            undefined,
-            client.emoji.paginator.first
-          ),
-        client
-          .button()
-          .secondary(
-            `previous_${ctx.author.id}_${date}`,
-            undefined,
-            client.emoji.paginator.previous
-          ),
-        client
-          .button()
-          .secondary(
-            `next_${ctx.author.id}_${date}`,
-            undefined,
-            client.emoji.paginator.next
-          ),
-        client
-          .button()
-          .secondary(
-            `last_${ctx.author.id}_${date}`,
-            undefined,
-            client.emoji.paginator.last
-          )
-      ),
-    ],
+    components: [createButtonRow()],
   });
 
   if (!reply) return;
@@ -72,23 +65,18 @@ export const paginator = async (
       case `first_${ctx.author?.id}_${date}`:
         page = 0;
         break;
-
       case `previous_${ctx.author?.id}_${date}`:
-        page = page > 0 ? --page : pages.length - 1;
+        page = page > 0 ? page - 1 : pages.length - 1;
         break;
-
       case `next_${ctx.author?.id}_${date}`:
-        page = page + 1 < pages.length ? ++page : 0;
+        page = (page + 1) % pages.length;
         break;
-
       case `last_${ctx.author?.id}_${date}`:
         page = pages.length - 1;
         break;
     }
 
-    await reply.edit({
-      embeds: [pages[page]],
-    });
+    await updateMessage();
   });
 
   collector.on("end", () => {
@@ -96,42 +84,13 @@ export const paginator = async (
       .edit({
         components: [
           new ActionRowBuilder<ExtendedButtonBuilder>().addComponents(
-            client
-              .button()
-              .secondary(
-                `first_${ctx.author?.id}_${date}`,
-                undefined,
-                client.emoji.paginator.first,
-                true
-              ),
-            client
-              .button()
-              .secondary(
-                `previous_${ctx.author?.id}_${date}`,
-                undefined,
-                client.emoji.paginator.previous,
-                true
-              ),
-            client
-              .button()
-              .secondary(
-                `next_${ctx.author?.id}_${date}`,
-                undefined,
-                client.emoji.paginator.next,
-                true
-              ),
-            client
-              .button()
-              .secondary(
-                `last_${ctx.author?.id}_${date}`,
-                undefined,
-                client.emoji.paginator.last,
-                true
-              )
+            createButton("first", client.emoji.paginator.first, true),
+            createButton("previous", client.emoji.paginator.previous, true),
+            createButton("next", client.emoji.paginator.next, true),
+            createButton("last", client.emoji.paginator.last, true)
           ),
         ],
       })
       .catch(() => null);
   });
-  return;
 };

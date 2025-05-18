@@ -23,6 +23,7 @@ import { ExtendedEmbedBuilder } from "../functions/Embed";
 import { ExtendedButtonBuilder } from "../functions/Button";
 import { Client as DokdoClient } from "dokdo";
 import CustomPrefix from "../database/schemas/CustomPrefix";
+import mongoose from "mongoose";
 
 interface WebhookConfig {
   cmdlogs: string;
@@ -46,8 +47,9 @@ export default class ExtendedClient extends Client {
   public readonly links = config.links;
   private body: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
   public utils = Utils;
+  public database: mongoose.mongo.Db | undefined;
 
-  public readonly prefix = this.config.prefix;
+  public readonly prefix = config.commands.prefix;
 
   public dokdo = new DokdoClient(this, {
     aliases: ["dokdo", "jsk"],
@@ -67,7 +69,7 @@ export default class ExtendedClient extends Client {
       if (customPrefix && customPrefix.prefix) return customPrefix.prefix;
     }
 
-    return this.config.prefix;
+    return config.commands.prefix;
   }
 
   public embed = (color?: ColorResolvable) =>
@@ -90,7 +92,11 @@ export default class ExtendedClient extends Client {
     loadPlugins(this);
 
     if (config.database.connect === true) {
-      await connectDatabase(this, config.database.uri, config.database.options);
+      this.database = await connectDatabase(
+        this,
+        config.database.uri,
+        config.database.options
+      );
     }
 
     await this.login(token);

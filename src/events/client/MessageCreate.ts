@@ -1,6 +1,6 @@
 import { type Message } from "discord.js";
 import { Context, Event, type ExtendedClient } from "../../structures/index";
-import NoPrefix from "../../database/schemas/NoPrefix";
+import config from "../../config";
 
 export default class MessageCreate extends Event {
   constructor(client: ExtendedClient, file: string) {
@@ -17,18 +17,9 @@ export default class MessageCreate extends Event {
       return this.client.emit("mention", message);
     }
 
-    const noPrefixUser: boolean = (await NoPrefix.findOne({
-      userId: message.author.id,
-    }))
-      ? true
-      : false;
+    if (!config.commands.message_commands) return;
 
-    const clientPrefix = await this.client.getPrefix(message.guild.id);
-
-    const prefix =
-      noPrefixUser && !message.content.startsWith(clientPrefix)
-        ? ""
-        : clientPrefix;
+    const prefix = await this.client.getPrefix(message.guild.id);
 
     const escapeRegex = (str: string): string =>
       str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
